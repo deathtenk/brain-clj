@@ -4,39 +4,39 @@
 (def test-code
   "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.")
 
-(defn find-next-bracket 
+(defn find-next-bracket
   ([code code-tracker]
-  (find-next-bracket code code-tracker -1))
- ([code code-tracker nested]
-  (loop [ct code-tracker
-         n nested]
-    (if (and (= (code ct) "]") (= n 0))
-      ct
-      (cond
-        (= "[" (code ct)) (recur (inc ct) (inc n))
-        (= "]" (code ct)) (recur (inc ct) (dec n))
-        :else (recur (inc ct) n))))))
+   (find-next-bracket code code-tracker -1))
+  ([code code-tracker nested]
+   (loop [ct code-tracker
+          n nested]
+     (if (and (= (code ct) "]") (= n 0))
+       ct
+       (cond
+         (= "[" (code ct)) (recur (inc ct) (inc n))
+         (= "]" (code ct)) (recur (inc ct) (dec n))
+         :else (recur (inc ct) n))))))
 
-(defn find-previous-bracket 
- ([code code-tracker]
-  (find-previous-bracket code code-tracker -1))
- ([code code-tracker nested]
-  (loop [ct code-tracker
-         n nested]
-    (if (and (= (code ct) "[") (= n 0))
-      ct
-      (cond
-        (= "]" (code ct)) (recur (dec ct) (inc n))
-        (= "[" (code ct)) (recur (dec ct) (dec n))
-        :else (recur (dec ct) n))))))
+(defn find-previous-bracket
+  ([code code-tracker]
+   (find-previous-bracket code code-tracker -1))
+  ([code code-tracker nested]
+   (loop [ct code-tracker
+          n nested]
+     (if (and (= (code ct) "[") (= n 0))
+       ct
+       (cond
+         (= "]" (code ct)) (recur (dec ct) (inc n))
+         (= "[" (code ct)) (recur (dec ct) (dec n))
+         :else (recur (dec ct) n))))))
 
 (defn brain [text]
   "This function attempts to interpret brainfuck (does not support input)"
   (let [code (s/split test-code #"")]
-    (loop [pointer 0 ;; pointer that looks at memory
-           mem (into [] (repeat 100 0)) ; memory 
-           code-tracker 0 ;; pointer that looks at the code
-           out ""] ;; output string
+    (loop [pointer 0                    ;; pointer that looks at memory
+           mem (into [] (repeat 100 0)) ;; memory 
+           code-tracker 0               ;; pointer that looks at the code
+           out ""]                      ;; output string
       (if (or (= code-tracker (count code)) (= pointer (count mem)))
         out
         (let [c (int (get mem pointer))
