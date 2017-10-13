@@ -30,11 +30,18 @@
       ct
       (recur (inc ct)))))
 
-(defn find-previous-bracket [code pointer]
-  (loop [p pointer]
-    (if (= (code p) "[")
-      p
-      (recur (dec p)))))
+(defn find-previous-bracket 
+ ([code code-tracker]
+  (find-previous-bracket code code-tracker -1))
+  ([code code-tracker nested]
+  (loop [ct code-tracker
+         n nested]
+    (if (and (= (code ct) "[") (= n 0))
+      ct
+      (cond
+        (= "]" (code ct)) (recur (dec ct) (inc n))
+        (= "[" (code ct)) (recur (dec ct) (dec n))
+        :else (recur (dec ct) n))))))
 
 (defn brain [text]
   "This function attempts to interpret brainfuck (does not support input)"
@@ -64,3 +71,8 @@
                 (recur pointer mem (inc code-tracker) out))))))))
 
 (= (brain test-code) "Hello World!\n")
+
+
+(= (find-previous-bracket ["[" "[" "]" "]"] 3) 0)
+
+#_(= (find-next-bracket ["[" ]))
