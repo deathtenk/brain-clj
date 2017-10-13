@@ -2,38 +2,25 @@
   (:require [clojure.string :as s]))
 
 (def test-code
-  "+++++ +++++             initialize counter (cell #0) to 10
-  [                       use loop to set 70/100/30/10
-      > +++++ ++              add  7 to cell #1
-      > +++++ +++++           add 10 to cell #2
-      > +++                   add  3 to cell #3
-      > +                     add  1 to cell #4
-  <<<< -                  decrement counter (cell #0)
-  ]
-  > ++ .                  print 'H'
-  > + .                   print 'e'
-  +++++ ++ .              print 'l'
-  .                       print 'l'
-  +++ .                   print 'o'
-  > ++ .                  print ' '
-  << +++++ +++++ +++++ .  print 'W'
-  > .                     print 'o'
-  +++ .                   print 'r'
-  ----- - .               print 'l'
-  ----- --- .             print 'd'
-  > + .                   print '!'
-  > .                     print '\n'")
+  "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.")
 
-(defn find-next-bracket [code code-tracker]
-  (loop [ct code-tracker]
-    (if (= (code ct) "]")
+(defn find-next-bracket 
+  ([code code-tracker]
+  (find-next-bracket code code-tracker -1))
+ ([code code-tracker nested]
+  (loop [ct code-tracker
+         n nested]
+    (if (and (= (code ct) "]") (= n 0))
       ct
-      (recur (inc ct)))))
+      (cond
+        (= "[" (code ct)) (recur (inc ct) (inc n))
+        (= "]" (code ct)) (recur (inc ct) (dec n))
+        :else (recur (inc ct) n))))))
 
 (defn find-previous-bracket 
  ([code code-tracker]
   (find-previous-bracket code code-tracker -1))
-  ([code code-tracker nested]
+ ([code code-tracker nested]
   (loop [ct code-tracker
          n nested]
     (if (and (= (code ct) "[") (= n 0))
@@ -72,7 +59,6 @@
 
 (= (brain test-code) "Hello World!\n")
 
-
 (= (find-previous-bracket ["[" "[" "]" "]"] 3) 0)
 
-#_(= (find-next-bracket ["[" ]))
+(= (find-next-bracket ["[" "[" "]" "]"] 0) 3)
