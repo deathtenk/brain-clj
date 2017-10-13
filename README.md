@@ -1,10 +1,15 @@
 # brain-clj
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure brainfuck compiler.
 
 ## Usage
 
-FIXME
+```clojure
+(require '[brain-clj.core :refer brain])
+(def brainf-code "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.")
+
+(brain brainf-code) ;; => "Hello World!\n"
+```
 
 ## License
 
