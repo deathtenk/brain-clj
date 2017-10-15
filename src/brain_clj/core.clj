@@ -1,9 +1,6 @@
 (ns brain-clj.core
   (:require [clojure.string :as s]))
 
-(def test-code
-  "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.")
-
 (defn find-next-bracket
   ([code code-tracker]
    (find-next-bracket code code-tracker -1))
@@ -32,9 +29,9 @@
 
 (defn brain [text]
   "This function attempts to interpret brainfuck (does not support input)"
-  (let [code (s/split test-code #"")]
+  (let [code (s/split text #"")]
     (loop [pointer 0                    ;; pointer that looks at memory
-           mem (into [] (repeat 100 0)) ;; memory 
+           mem (into [] (repeat 100 0)) ;; memory
            code-tracker 0               ;; pointer that looks at the code
            out ""]                      ;; output string
       (if (or (= code-tracker (count code)) (= pointer (count mem)))
@@ -56,9 +53,3 @@
                              (recur pointer mem (find-previous-bracket code code-tracker) out))
                 :else
                 (recur pointer mem (inc code-tracker) out))))))))
-
-(= (brain test-code) "Hello World!\n")
-
-(= (find-previous-bracket ["[" "[" "]" "]"] 3) 0)
-
-(= (find-next-bracket ["[" "[" "]" "]"] 0) 3)
